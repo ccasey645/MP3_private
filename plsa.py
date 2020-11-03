@@ -1,6 +1,5 @@
 import numpy as np
 import math
-from scipy.stats import norm
 
 
 def normalize(input_matrix):
@@ -224,8 +223,12 @@ class Corpus(object):
         # ############################
         # your code here
         # ############################
-        mean = np.mean([range(0, number_of_topics)])
-        self.likelihoods.append(norm.logpdf(self.topic_prob, mean, 1.0).sum())
+        total = 0
+        for doc_index in range(self.number_of_documents):
+            for topic_index in range(number_of_topics):
+                for word_index in range(self.vocabulary_size):
+                    total += self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
+        self.likelihoods.append(total)
 
     def plsa(self, number_of_topics, max_iter, epsilon):
 
