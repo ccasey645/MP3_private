@@ -185,13 +185,6 @@ class Corpus(object):
                 for word_index in range(self.vocabulary_size):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
             self.topic_prob[:][:][0] = normalize(self.topic_prob[:][:][0])
-        # for doc_index in range(0, self.number_of_documents):
-        #     prob_word_in_doc = np.matmul(self.document_topic_prob[doc_index], self.topic_word_prob)
-        #     normalizer = normalize(prob_word_in_doc)
-        #     self.topic_prob[doc_index] = prob_word_in_doc / normalizer
-        #return prob_word_in_doc / normalizer
-
-            
 
     def maximization_step(self, number_of_topics):
         """ The M-step updates P(w | z)
