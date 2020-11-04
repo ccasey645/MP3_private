@@ -191,21 +191,9 @@ class Corpus(object):
         # ############################
         for doc_index in range(self.number_of_documents):
             for topic_index in range(2):
-            #    word_sum = 0
                 for word_index in range(self.vocabulary_size):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
-            #        word_sum += self.topic_prob[doc_index][topic_index][word_index]
-                #self.topic_prob[doc_index][topic_index] /= word_sum
-                #self.topic_prob = three_d_normalize(self.topic_prob)
             self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index].transpose()).transpose()
-            #denominator = self.topic_prob[doc_index].sum(axis=0)
-            #self.topic_prob[doc_index] /= denominator
-            #self.topic_prob[doc_index] = thing.transpose()
-            # for word_index in range(self.vocabulary_size):
-            #     for topic_index in range(2):
-            #
-            #
-            # self.topic_prob[doc_index] /= denominator
 
 
 
@@ -223,9 +211,7 @@ class Corpus(object):
             for topic_index in range(number_of_topics):
                 for word_index in range(self.vocabulary_size):
                     self.document_topic_prob[doc_index][topic_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
-                    #thing += self.document_topic_prob[doc_index][topic_index]
-                #self.document_topic_prob[doc_index] /= thing
-        self.document_topic_prob = normalize(self.document_topic_prob)
+            self.document_topic_prob = normalize(self.document_topic_prob)
 
         # update P(z | d)
 
@@ -236,8 +222,6 @@ class Corpus(object):
             for word_index in range(self.vocabulary_size):
                 for doc_index in range(self.number_of_documents):
                     self.topic_word_prob[topic_index][word_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
-                    #thing += self.topic_word_prob[topic_index][word_index]
-                #self.topic_word_prob[topic_index] /= thing
             self.topic_word_prob = normalize(self.topic_word_prob)
 
 
