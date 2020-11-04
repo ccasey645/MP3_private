@@ -197,8 +197,8 @@ class Corpus(object):
             #        word_sum += self.topic_prob[doc_index][topic_index][word_index]
                 #self.topic_prob[doc_index][topic_index] /= word_sum
                 #self.topic_prob = three_d_normalize(self.topic_prob)
-                denominator = self.topic_prob[doc_index].sum(axis=0)
-                self.topic_prob[doc_index][topic_index] /= denominator
+            denominator = self.topic_prob[doc_index].sum(axis=0)
+            self.topic_prob[doc_index] /= denominator
             #self.topic_prob[doc_index] = thing.transpose()
             # for word_index in range(self.vocabulary_size):
             #     for topic_index in range(2):
