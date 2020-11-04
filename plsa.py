@@ -232,7 +232,7 @@ class Corpus(object):
                 for doc_index in range(self.number_of_documents):
                     self.topic_word_prob[topic_index][word_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                     thing += self.topic_word_prob[topic_index][word_index]
-                self.topic_word_prob[topic_index][word_index] /= thing
+                self.topic_word_prob[topic_index] /= thing
             #self.topic_word_prob = normalize(self.topic_word_prob)
 
 
