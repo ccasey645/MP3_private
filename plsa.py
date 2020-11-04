@@ -15,7 +15,17 @@ def normalize(input_matrix):
     new_matrix = input_matrix / row_sums[:, np.newaxis]
     return new_matrix
 
-       
+
+def normalize_cols(input_matrix):
+    """
+    Normalizes the rows of a 2d input_matrix so they sum to 1
+    """
+
+    col_sums = input_matrix.sum(axis=0)
+    new_matrix = input_matrix / row_sums[:, :, np.newaxis]
+    return new_matrix
+
+
 class Corpus(object):
 
     """
@@ -180,10 +190,17 @@ class Corpus(object):
         # your code here
         # ############################
         for doc_index in range(self.number_of_documents):
+            topic_sum = 0
             for topic_index in range(2):
+                word_sum = 0
                 for word_index in range(self.vocabulary_size):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
-            self.topic_prob[:][:][0] = normalize(self.topic_prob[:][:][0])
+                    word_sum += self.topic_prob[doc_index][topic_index][word_index]
+                #self.topic_prob = three_d_normalize(self.topic_prob)
+            denominator = self.topic_prob[doc_index].sum(axis=0)
+            self.topic_prob[doc_index] /= denominator[np.newaxis, :]
+
+
 
     def maximization_step(self, number_of_topics):
         """ The M-step updates P(w | z)
@@ -224,10 +241,13 @@ class Corpus(object):
         # your code here
         # ############################
         total = 0
+        topic_total = 0
         for doc_index in range(self.number_of_documents):
-            for topic_index in range(number_of_topics):
-                for word_index in range(self.vocabulary_size):
-                    total += self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
+            for word_index in range(self.vocabulary_size):
+                topic_total = 0
+                for topic_index in range(number_of_topics):
+                    topic_total += self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
+                total += self.term_doc_matrix[doc_index][word_index] * np.log(topic_total)
         self.likelihoods.append(total)
 
     def plsa(self, number_of_topics, max_iter, epsilon):
@@ -260,7 +280,7 @@ class Corpus(object):
             self.expectation_step()
             self.maximization_step(number_of_topics)
             self.calculate_likelihood(number_of_topics)
-            if current_likelihood and current_likelihood - self.likelihoods[-1] < epsilon:
+            if current_likelihood and abs(current_likelihood - self.likelihoods[-1]) < epsilon:
                 print("converged!!")
                 break
 
@@ -271,7 +291,7 @@ class Corpus(object):
 
 
 def main():
-    documents_path = 'data/DBLP.txt'
+    documents_path = 'data/test.txt'
     corpus = Corpus(documents_path)  # instantiate corpus
     corpus.build_corpus()
     corpus.build_vocabulary()
