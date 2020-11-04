@@ -197,8 +197,8 @@ class Corpus(object):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
                     word_sum += self.topic_prob[doc_index][topic_index][word_index]
                 #self.topic_prob = three_d_normalize(self.topic_prob)
-            denominator = self.topic_prob[doc_index].sum(axis=0)
-            self.topic_prob[doc_index] /= denominator[np.newaxis, :]
+                denominator = self.topic_prob[doc_index].sum(axis=0)
+                self.topic_prob[doc_index] /= denominator[np.newaxis, :]
 
 
 
@@ -300,7 +300,7 @@ def main():
     print("Number of documents:" + str(len(corpus.documents)))
     number_of_topics = 2
     max_iterations = 160
-    epsilon = 0.0001
+    epsilon = 0.001
     corpus.plsa(number_of_topics, max_iterations, epsilon)
 
 
