@@ -83,7 +83,7 @@ class Corpus(object):
             for word in document:
                 corpus_vocab_set.add(word)
 
-        self.vocabulary = sorted(list(corpus_vocab_set), key=str.casefold)
+        self.vocabulary = sorted(list(corpus_vocab_set), key=lambda v: v.lower())
         self.vocabulary_size = len(self.vocabulary)
 
 
@@ -271,7 +271,7 @@ class Corpus(object):
 
 
 def main():
-    documents_path = 'data/test.txt'
+    documents_path = 'data/DBLP.txt'
     corpus = Corpus(documents_path)  # instantiate corpus
     corpus.build_corpus()
     corpus.build_vocabulary()
