@@ -224,7 +224,7 @@ class Corpus(object):
                     self.document_topic_prob[doc_index][topic_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                     #thing += self.document_topic_prob[doc_index][topic_index]
                 #self.document_topic_prob[doc_index] /= thing
-            self.document_topic_prob = normalize(self.document_topic_prob)
+                self.document_topic_prob = normalize(self.document_topic_prob)
 
         # update P(z | d)
 
@@ -237,7 +237,7 @@ class Corpus(object):
                     self.topic_word_prob[topic_index][word_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                     #thing += self.topic_word_prob[topic_index][word_index]
                 #self.topic_word_prob[topic_index] /= thing
-            self.topic_word_prob = normalize(self.topic_word_prob)
+                self.topic_word_prob = normalize(self.topic_word_prob)
 
 
     def calculate_likelihood(self, number_of_topics):
