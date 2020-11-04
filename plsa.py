@@ -220,7 +220,6 @@ class Corpus(object):
         # ############################
         for doc_index in range(self.number_of_documents):
             for topic_index in range(number_of_topics):
-                thing = 0
                 for word_index in range(self.vocabulary_size):
                     self.document_topic_prob[doc_index][topic_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                     #thing += self.document_topic_prob[doc_index][topic_index]
@@ -234,7 +233,6 @@ class Corpus(object):
         # ############################
         for topic_index in range(number_of_topics):
             for word_index in range(self.vocabulary_size):
-                thing = 0
                 for doc_index in range(self.number_of_documents):
                     self.topic_word_prob[topic_index][word_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                     #thing += self.topic_word_prob[topic_index][word_index]
@@ -259,7 +257,7 @@ class Corpus(object):
                 topic_total = 0
                 for topic_index in range(number_of_topics):
                     topic_total += self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
-                total += self.term_doc_matrix[doc_index][word_index] * np.log(topic_total)
+                total += np.log(self.term_doc_matrix[doc_index][word_index] * topic_total)
         self.likelihoods.append(total)
 
     def plsa(self, number_of_topics, max_iter, epsilon):
