@@ -197,8 +197,9 @@ class Corpus(object):
             #        word_sum += self.topic_prob[doc_index][topic_index][word_index]
                 #self.topic_prob[doc_index][topic_index] /= word_sum
                 #self.topic_prob = three_d_normalize(self.topic_prob)
-            denominator = self.topic_prob[doc_index].sum(axis=0)
-            self.topic_prob[doc_index] /= denominator
+            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index].transpose()).transpose()
+            #denominator = self.topic_prob[doc_index].sum(axis=0)
+            #self.topic_prob[doc_index] /= denominator
             #self.topic_prob[doc_index] = thing.transpose()
             # for word_index in range(self.vocabulary_size):
             #     for topic_index in range(2):
@@ -237,7 +238,7 @@ class Corpus(object):
                     self.topic_word_prob[topic_index][word_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                     #thing += self.topic_word_prob[topic_index][word_index]
                 #self.topic_word_prob[topic_index] /= thing
-        self.topic_word_prob = normalize(self.topic_word_prob)
+            self.topic_word_prob = normalize(self.topic_word_prob)
 
 
     def calculate_likelihood(self, number_of_topics):
@@ -290,11 +291,9 @@ class Corpus(object):
             self.expectation_step()
             self.maximization_step(number_of_topics)
             self.calculate_likelihood(number_of_topics)
-            if iteration == 200:
+            if current_likelihood and abs(current_likelihood - self.likelihoods[-1]) < epsilon:
+                print("converged!!")
                 break
-            # if current_likelihood and abs(current_likelihood - self.likelihoods[-1]) < epsilon:
-            #     print("converged!!")
-            #     break
 
             current_likelihood = self.likelihoods[-1]
         print("log likelihoods!!")
