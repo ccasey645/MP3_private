@@ -207,11 +207,20 @@ class Corpus(object):
         # ############################
         # your code here
         # ############################
-        for doc_index in range(self.number_of_documents):
-            for topic_index in range(number_of_topics):
-                for word_index in range(self.vocabulary_size):
-                    self.document_topic_prob[doc_index][topic_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
-            self.document_topic_prob = normalize(self.document_topic_prob)
+        for idoc in range(self.number_of_documents):
+            topic_cnts = []
+            for itopic in range(number_of_topics):
+                psuedo_count = 0
+                for iword in range(self.vocabulary_size):
+                    psuedo_count += self.term_doc_matrix[idoc][iword] * self.topic_prob[idoc][itopic][iword]
+                topic_cnts.append(psuedo_count)
+            self.document_topic_prob[idoc, :] = normalize(np.array(topic_cnts).reshape(1, -1))
+
+        # for doc_index in range(self.number_of_documents):
+        #     for topic_index in range(number_of_topics):
+        #         for word_index in range(self.vocabulary_size):
+        #             self.document_topic_prob[doc_index][topic_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
+        #     self.document_topic_prob = normalize(self.document_topic_prob)
 
         # update P(z | d)
 
@@ -219,10 +228,15 @@ class Corpus(object):
         # your code here
         # ############################
         for topic_index in range(number_of_topics):
+            word_counts = []
             for word_index in range(self.vocabulary_size):
+                count = 0
                 for doc_index in range(self.number_of_documents):
-                    self.topic_word_prob[topic_index][word_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
-            self.topic_word_prob = normalize(self.topic_word_prob)
+                    #self.topic_word_prob[topic_index][word_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
+                    count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
+                word_counts.append(count)
+            #self.topic_word_prob = normalize(self.topic_word_prob)
+            self.topic_word_prob[topic_index, :] = normalize(np.array(word_counts).reshape(1,-1))
 
 
     def calculate_likelihood(self, number_of_topics):
