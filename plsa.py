@@ -247,7 +247,7 @@ class Corpus(object):
                 topic_total = 0
                 for topic_index in range(number_of_topics):
                     topic_total += self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
-                total += self.term_doc_matrix[doc_index][word_index] * topic_total
+                total += self.term_doc_matrix[doc_index][word_index] * np.log(topic_total)
         self.likelihoods.append(total)
 
     def plsa(self, number_of_topics, max_iter, epsilon):
@@ -300,7 +300,7 @@ def main():
     print("Number of documents:" + str(len(corpus.documents)))
     number_of_topics = 2
     max_iterations = 160
-    epsilon = 0.001
+    epsilon = 0.0001
     corpus.plsa(number_of_topics, max_iterations, epsilon)
 
 
