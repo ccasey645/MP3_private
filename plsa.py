@@ -247,9 +247,6 @@ class Corpus(object):
         Append the calculated log-likelihood to self.likelihoods
 
         """
-        # ############################
-        # your code here
-        # ############################
         total = 0
         topic_total = 0
         for doc_index in range(self.number_of_documents):
@@ -310,7 +307,7 @@ def main():
     print("Number of documents:" + str(len(corpus.documents)))
     number_of_topics = 2
     max_iterations = 300
-    epsilon = 0.0001
+    epsilon = 0.00001
     corpus.plsa(number_of_topics, max_iterations, epsilon)
 
 
