@@ -181,17 +181,13 @@ class Corpus(object):
         else:
             self.initialize_uniformly(number_of_topics)
 
-    def expectation_step(self):
+    def expectation_step(self, number_of_topics):
         """ The E-step updates P(z | w, d)
         """
         print("E step:")
-        
-        # ############################
-        # your code here
-        # ############################
         for doc_index in range(self.number_of_documents):
             for word_index in range(self.vocabulary_size):
-                for topic_index in range(2):
+                for topic_index in range(number_of_topics):
 
                     #total = 0
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
@@ -293,7 +289,7 @@ class Corpus(object):
             # ############################
             # your code here
             # ############################
-            self.expectation_step()
+            self.expectation_step(number_of_topics)
             self.maximization_step(number_of_topics)
             self.calculate_likelihood(number_of_topics)
             if current_likelihood and abs(current_likelihood - self.likelihoods[-1]) < epsilon:
