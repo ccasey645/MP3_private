@@ -7,20 +7,19 @@ def normalize(input_matrix, is_col=False):
     Normalizes the rows of a 2d input_matrix so they sum to 1
     """
     if is_col:
-        col_sums = input_matrix.sum(axis=0)
-        try:
-            assert (np.count_nonzero(col_sums)==np.shape(col_sums)[0]) # no row should sum to zero
-        except Exception:
-            raise Exception("Error while normalizing. Row(s) sum to zero")
-        new_matrix = input_matrix / col_sums
-
+        axis = 0
     else:
-        row_sums = input_matrix.sum(axis=1)
-        try:
-            assert (np.count_nonzero(row_sums)==np.shape(row_sums)[0]) # no row should sum to zero
-        except Exception:
-            raise Exception("Error while normalizing. Row(s) sum to zero")
-        new_matrix = input_matrix / row_sums.reshape(-1,1)
+        axis = 1
+    sums = input_matrix.sum(axis=axis)
+    try:
+        assert (np.count_nonzero(sums)==np.shape(sums)[0]) # no row should sum to zero
+    except Exception:
+        raise Exception("Error while normalizing. Row(s) sum to zero")
+    if is_col:
+        new_matrix = input_matrix / sums
+    else:
+        new_matrix = input_matrix / sums.reshape(-1,1)
+
     return new_matrix
 
 
@@ -174,8 +173,6 @@ class Corpus(object):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
                     topic_sum += self.topic_prob[doc_index][topic_index][word_index]
             self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
-                # for topic_index in range(number_of_topics):
-                #     self.topic_prob[doc_index][topic_index][word_index] /= topic_sum
 
     def maximization_step(self, number_of_topics):
         """ The M-step updates P(w | z)
