@@ -180,6 +180,11 @@ class Corpus(object):
                 self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
             #self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
 
+        for doc_index in range(self.number_of_documents):
+            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
+
+
+
     def maximization_step(self, number_of_topics):
         """ The M-step updates P(w | z)
         """
@@ -247,6 +252,7 @@ class Corpus(object):
             self.expectation_step(number_of_topics)
             self.maximization_step(number_of_topics)
             self.calculate_likelihood(number_of_topics)
+            current_likelihood = self.likelihoods[-1]
             if current_likelihood and abs(current_likelihood - self.likelihoods[-1]) < epsilon:
                 print("converged!!")
                 break
@@ -267,7 +273,7 @@ def main():
     print("Number of documents:" + str(len(corpus.documents)))
     number_of_topics = 2
     max_iterations = 300
-    epsilon = 0.00001
+    epsilon = 0.0000001
     corpus.plsa(number_of_topics, max_iterations, epsilon)
 
 
