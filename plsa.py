@@ -313,8 +313,8 @@ def main():
     print("Vocabulary size:" + str(len(corpus.vocabulary)))
     print("Number of documents:" + str(len(corpus.documents)))
     number_of_topics = 2
-    max_iterations = 160
-    epsilon = 0.001
+    max_iterations = 300
+    epsilon = 0.0001
     corpus.plsa(number_of_topics, max_iterations, epsilon)
 
 
