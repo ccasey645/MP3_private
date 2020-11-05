@@ -186,14 +186,14 @@ class Corpus(object):
                 for word_index in range(self.vocabulary_size):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
                     word_total += self.topic_prob[doc_index][topic_index][word_index]
+                for word_index in range(self.vocabulary_size):
+                    self.topic_prob[doc_index][topic_index][word_index] /= word_total
             self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
                     #topic_total += self.topic_prob[doc_index][topic_index][word_index]
                 #self.topic_prob[doc_index][topic_index] /= topic_total
                 # for topic_index in range(2):
                 #     self.topic_prob[doc_index][topic_index][word_index] /= total
             #     self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index].transpose()).transpose()
-        for doc_index in range(self.number_of_documents):
-            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
             # self.topic_prob = normalize_three_d(self.topic_prob)
 
         # for doc_index in range(self.number_of_documents):
