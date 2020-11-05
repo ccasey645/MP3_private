@@ -62,9 +62,11 @@ class Corpus(object):
         
         Update self.number_of_documents
         """
+
         with open(self.documents_path, "r") as data_file:
             for line in data_file:
                 data = line.strip().split()
+                label_text_split_index = 1
                 try:
                     label = int(data[0])
                 except:
@@ -74,13 +76,13 @@ class Corpus(object):
                     pass
                     #label
                 finally:
-                    label_text_split_index = 1
+
                     try:
                         self.documents.append(data[label_text_split_index:])
                     except IndexError:
                         raise RuntimeError("No text data after lablel!")
-                    else:
-                        self.number_of_documents = len(self.documents)
+
+        self.number_of_documents = len(self.documents)
 
     def build_vocabulary(self):
         """
@@ -181,8 +183,8 @@ class Corpus(object):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
                     topic_sum += self.topic_prob[doc_index][topic_index][word_index]
             self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
-        for doc_index in range(self.number_of_documents):
-            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
+        # for doc_index in range(self.number_of_documents):
+        #     self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
                 # for topic_index in range(number_of_topics):
                 #     self.topic_prob[doc_index][topic_index][word_index] /= topic_sum
                 #topic_counts.append(topic_sum)
@@ -208,6 +210,8 @@ class Corpus(object):
                     count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                 word_counts.append(count)
             self.topic_word_prob[topic_index, :] = normalize(np.array(word_counts).reshape(1,-1))
+        # print("topic_word_prob")
+        # print(self.topic_word_prob)
 
         # update P(z | d)
         for doc_index in range(self.number_of_documents):
@@ -218,6 +222,8 @@ class Corpus(object):
                     count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                 topic_counts.append(count)
             self.document_topic_prob[doc_index, :] = normalize(np.array(topic_counts).reshape(1, -1))
+        # print("document_topic_prob:")
+        # print(self.document_topic_prob)
 
     def calculate_likelihood(self, number_of_topics):
         """ Calculate the current log-likelihood of the model using
@@ -233,7 +239,7 @@ class Corpus(object):
                 topic_total = 0
                 for topic_index in range(number_of_topics):
                     topic_total += self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
-                total += self.term_doc_matrix[doc_index][word_index] * np.log10(topic_total)
+                total += self.term_doc_matrix[doc_index][word_index] * np.log(topic_total)
         self.likelihoods.append(total)
 
     def plsa(self, number_of_topics, max_iter, epsilon):
