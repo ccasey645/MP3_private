@@ -181,6 +181,7 @@ class Corpus(object):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
                     topic_sum += self.topic_prob[doc_index][topic_index][word_index]
             self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
+        for doc_index in range(self.number_of_documents):
             self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
                 # for topic_index in range(number_of_topics):
                 #     self.topic_prob[doc_index][topic_index][word_index] /= topic_sum
