@@ -309,7 +309,7 @@ def main():
     print("Number of documents:" + str(len(corpus.documents)))
     number_of_topics = 2
     max_iterations = 160
-    epsilon = 0.0001
+    epsilon = 0.00001
     corpus.plsa(number_of_topics, max_iterations, epsilon)
 
 
