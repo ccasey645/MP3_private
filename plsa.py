@@ -205,6 +205,19 @@ class Corpus(object):
         """
         print("M step:")
         # update P(w | z)
+        for topic_index in range(number_of_topics):
+            word_counts = []
+            for word_index in range(self.vocabulary_size):
+                count = 0
+                for doc_index in range(self.number_of_documents):
+                    #self.topic_word_prob[topic_index][word_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
+                    count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
+                word_counts.append(count)
+            #self.topic_word_prob = normalize(self.topic_word_prob, is_col=True)
+            self.topic_word_prob[topic_index, :] = normalize(np.array(word_counts).reshape(1,-1))
+        #self.topic_word_prob = normalize(self.topic_word_prob)
+
+        # update P(z | d)
         for doc_index in range(self.number_of_documents):
             topic_counts = []
             for topic_index in range(number_of_topics):
@@ -220,19 +233,6 @@ class Corpus(object):
         #             self.document_topic_prob[doc_index][topic_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
         #     self.document_topic_prob = normalize(self.document_topic_prob)
 
-        # update P(z | d)
-
-        for topic_index in range(number_of_topics):
-            word_counts = []
-            for word_index in range(self.vocabulary_size):
-                count = 0
-                for doc_index in range(self.number_of_documents):
-                    #self.topic_word_prob[topic_index][word_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
-                    count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
-                word_counts.append(count)
-            #self.topic_word_prob = normalize(self.topic_word_prob, is_col=True)
-            self.topic_word_prob[topic_index, :] = normalize(np.array(word_counts).reshape(1,-1))
-        #self.topic_word_prob = normalize(self.topic_word_prob)
 
     def calculate_likelihood(self, number_of_topics):
         """ Calculate the current log-likelihood of the model using
