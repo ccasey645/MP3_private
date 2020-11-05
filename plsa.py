@@ -190,13 +190,14 @@ class Corpus(object):
         # your code here
         # ############################
         for doc_index in range(self.number_of_documents):
-            for word_index in range(self.vocabulary_size):
-                total = 0
-                for topic_index in range(2):
+            for topic_index in range(2):
+                for word_index in range(self.vocabulary_size):
+                    #total = 0
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
-                    total += self.topic_prob[doc_index][topic_index][word_index]
-                for topic_index in range(2):
-                    self.topic_prob[doc_index][topic_index][word_index] /= total
+                    #total += self.topic_prob[doc_index][topic_index][word_index]
+                # for topic_index in range(2):
+                #     self.topic_prob[doc_index][topic_index][word_index] /= total
+                self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index].transpose()).transpose()
             self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
 
 
