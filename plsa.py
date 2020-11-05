@@ -210,7 +210,7 @@ class Corpus(object):
                 for word_index in range(self.vocabulary_size):
                     count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                 topic_counts.append(count)
-            self.document_topic_prob[doc_index, :] = normalize(np.array(topic_counts).reshape(1, -1))
+            self.document_topic_prob[doc_index] = normalize(np.array(topic_counts).reshape(1, -1))
         #self.document_topic_prob = normalize(self.document_topic_prob)
         # for doc_index in range(self.number_of_documents):
         #     for topic_index in range(number_of_topics):
@@ -229,7 +229,7 @@ class Corpus(object):
                     count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                 word_counts.append(count)
             #self.topic_word_prob = normalize(self.topic_word_prob)
-            self.topic_word_prob[topic_index, :] = normalize(np.array(word_counts).reshape(1,-1))
+            self.topic_word_prob[topic_index] = normalize(np.array(word_counts).reshape(1,-1))
         #self.topic_word_prob = normalize(self.topic_word_prob)
 
     def calculate_likelihood(self, number_of_topics):
