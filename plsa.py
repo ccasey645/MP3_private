@@ -181,13 +181,12 @@ class Corpus(object):
         print("E step:")
         for doc_index in range(self.number_of_documents):
             topic_total = 0
-            for word_index in range(self.vocabulary_size):
-                for topic_index in range(number_of_topics):
-                    word_total = 0
-
+            for topic_index in range(number_of_topics):
+                word_total = 0
+                for word_index in range(self.vocabulary_size):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
                     word_total += self.topic_prob[doc_index][topic_index][word_index]
-                self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
+                self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
                     #topic_total += self.topic_prob[doc_index][topic_index][word_index]
                 #self.topic_prob[doc_index][topic_index] /= topic_total
                 # for topic_index in range(2):
@@ -212,7 +211,7 @@ class Corpus(object):
                     count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                 topic_counts.append(count)
             self.document_topic_prob[doc_index, :] = normalize(np.array(topic_counts).reshape(1, -1))
-        self.document_topic_prob = normalize(self.document_topic_prob)
+        #self.document_topic_prob = normalize(self.document_topic_prob)
         # for doc_index in range(self.number_of_documents):
         #     for topic_index in range(number_of_topics):
         #         for word_index in range(self.vocabulary_size):
@@ -231,7 +230,7 @@ class Corpus(object):
                 word_counts.append(count)
             #self.topic_word_prob = normalize(self.topic_word_prob)
             self.topic_word_prob[topic_index, :] = normalize(np.array(word_counts).reshape(1,-1))
-        self.topic_word_prob = normalize(self.topic_word_prob)
+        #self.topic_word_prob = normalize(self.topic_word_prob)
 
     def calculate_likelihood(self, number_of_topics):
         """ Calculate the current log-likelihood of the model using
