@@ -107,19 +107,7 @@ class Corpus(object):
 
         self.term_doc_matrix[i][j] is the count of term j in document i
         """
-        # ############################
-        # your code here
-        # ############################
-        
         self.term_doc_matrix = []
-
-        for index, document in enumerate(self.documents):
-            word_count = {}
-            for word in document:
-                try:
-                    word_count[word] += 1
-                except KeyError:
-                    word_count[word] = 1
 
         for index, document in enumerate(self.documents):
             word_count = {}
@@ -182,7 +170,6 @@ class Corpus(object):
         """ The E-step updates P(z | w, d)
         """
         print("E step:")
-        topic_counts = []
         for doc_index in range(self.number_of_documents):
             for word_index in range(self.vocabulary_size):
                 topic_sum = 0
@@ -191,20 +178,6 @@ class Corpus(object):
                     topic_sum += self.topic_prob[doc_index][topic_index][word_index]
                 for topic_index in range(number_of_topics):
                     self.topic_prob[doc_index][topic_index][word_index] /= topic_sum
-                #self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
-        # for doc_index in range(self.number_of_documents):
-        #     self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
-                # for topic_index in range(number_of_topics):
-                #     self.topic_prob[doc_index][topic_index][word_index] /= topic_sum
-                #topic_counts.append(topic_sum)
-        # for doc_index in range(self.number_of_documents):
-        #     for word_index in range(self.vocabulary_size):
-        #         for topic_index in range(number_of_topics):
-        #             self.topic_prob[doc_index][topic_index][word_index] /= topic_counts[word_index]
-        #         #self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
-        #     #self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
-
-
 
     def maximization_step(self, number_of_topics):
         """ The M-step updates P(w | z)
