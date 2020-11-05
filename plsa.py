@@ -179,7 +179,7 @@ class Corpus(object):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
 
                 self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
-            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
+            #self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
 
     def maximization_step(self, number_of_topics):
         """ The M-step updates P(w | z)
