@@ -191,9 +191,13 @@ class Corpus(object):
         # ############################
         for doc_index in range(self.number_of_documents):
             for word_index in range(self.vocabulary_size):
+                total = 0
                 for topic_index in range(2):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
-            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index].transpose()).transpose()
+                    total += self.topic_prob[doc_index][topic_index][word_index]
+                for topic_index in range(2):
+                    self.topic_prob[doc_index][topic_index][word_index] /= total
+            #self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index].transpose()).transpose()
 
 
 
@@ -309,7 +313,7 @@ def main():
     print("Number of documents:" + str(len(corpus.documents)))
     number_of_topics = 2
     max_iterations = 160
-    epsilon = 0.00001
+    epsilon = 0.001
     corpus.plsa(number_of_topics, max_iterations, epsilon)
 
 
