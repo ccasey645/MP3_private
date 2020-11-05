@@ -20,7 +20,7 @@ def normalize(input_matrix, is_col=False):
             assert (np.count_nonzero(row_sums)==np.shape(row_sums)[0]) # no row should sum to zero
         except Exception:
             raise Exception("Error while normalizing. Row(s) sum to zero")
-        new_matrix = input_matrix / row_sums[:, np.newaxis]
+        new_matrix = input_matrix / row_sums.reshape(-1,1)
     return new_matrix
 
 
@@ -186,13 +186,14 @@ class Corpus(object):
                 for word_index in range(self.vocabulary_size):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
                     word_total += self.topic_prob[doc_index][topic_index][word_index]
-                self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
+            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
                     #topic_total += self.topic_prob[doc_index][topic_index][word_index]
                 #self.topic_prob[doc_index][topic_index] /= topic_total
                 # for topic_index in range(2):
                 #     self.topic_prob[doc_index][topic_index][word_index] /= total
             #     self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index].transpose()).transpose()
-            # self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
+        for doc_index in range(self.number_of_documents):
+            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
             # self.topic_prob = normalize_three_d(self.topic_prob)
 
         # for doc_index in range(self.number_of_documents):
@@ -210,7 +211,7 @@ class Corpus(object):
                 for word_index in range(self.vocabulary_size):
                     count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                 topic_counts.append(count)
-            self.document_topic_prob[doc_index] = normalize(np.array(topic_counts).reshape(1, -1))
+            self.document_topic_prob[doc_index, :] = normalize(np.array(topic_counts).reshape(1, -1))
         #self.document_topic_prob = normalize(self.document_topic_prob)
         # for doc_index in range(self.number_of_documents):
         #     for topic_index in range(number_of_topics):
@@ -229,7 +230,7 @@ class Corpus(object):
                     count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                 word_counts.append(count)
             #self.topic_word_prob = normalize(self.topic_word_prob)
-            self.topic_word_prob[topic_index] = normalize(np.array(word_counts).reshape(1,-1))
+            self.topic_word_prob[topic_index, :] = normalize(np.array(word_counts).reshape(1,-1))
         #self.topic_word_prob = normalize(self.topic_word_prob)
 
     def calculate_likelihood(self, number_of_topics):
