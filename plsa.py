@@ -62,9 +62,6 @@ class Corpus(object):
         
         Update self.number_of_documents
         """
-        # #############################
-        # your code here
-        # #############################
         with open(self.documents_path, "r") as data_file:
             for line in data_file:
                 data = line.strip().split()
@@ -92,9 +89,6 @@ class Corpus(object):
 
         Update self.vocabulary_size
         """
-        # #############################
-        # your code here
-        # #############################
         corpus_vocab_set = set()
         for document in self.documents:
             for word in document:
@@ -275,10 +269,6 @@ class Corpus(object):
 
         for iteration in range(max_iter):
             print("Iteration #" + str(iteration + 1) + "...")
-
-            # ############################
-            # your code here
-            # ############################
             self.expectation_step(number_of_topics)
             self.maximization_step(number_of_topics)
             self.calculate_likelihood(number_of_topics)
