@@ -253,7 +253,6 @@ class Corpus(object):
             self.expectation_step(number_of_topics)
             self.maximization_step(number_of_topics)
             self.calculate_likelihood(number_of_topics)
-            current_likelihood = self.likelihoods[-1]
             if current_likelihood and abs(current_likelihood - self.likelihoods[-1]) < epsilon:
                 print("converged!!")
                 break
