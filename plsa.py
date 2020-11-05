@@ -72,11 +72,8 @@ class Corpus(object):
                 except:
                     label_text_split_index = 0
                 else:
-                    #Todo: figure out where label goes!
                     pass
-                    #label
                 finally:
-
                     try:
                         self.documents.append(data[label_text_split_index:])
                     except IndexError:
@@ -176,8 +173,9 @@ class Corpus(object):
                 for topic_index in range(number_of_topics):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
                     topic_sum += self.topic_prob[doc_index][topic_index][word_index]
-                for topic_index in range(number_of_topics):
-                    self.topic_prob[doc_index][topic_index][word_index] /= topic_sum
+                self.topic_prob[doc_index][topic_index] = normalize(self.topic_prob[doc_index], is_col=True)
+                # for topic_index in range(number_of_topics):
+                #     self.topic_prob[doc_index][topic_index][word_index] /= topic_sum
 
     def maximization_step(self, number_of_topics):
         """ The M-step updates P(w | z)
