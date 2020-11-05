@@ -122,6 +122,13 @@ class Corpus(object):
                     word_count[word] = 1
 
         for index, document in enumerate(self.documents):
+            word_count = {}
+            for word in document:
+                try:
+                    word_count[word] += 1
+                except KeyError:
+                    word_count[word] = 1
+
             for word in self.vocabulary:
                 try:
                     self.term_doc_matrix[index].append(word_count[word])
@@ -203,19 +210,6 @@ class Corpus(object):
         """ The M-step updates P(w | z)
         """
         print("M step:")
-
-        # update P(z | d)
-        for doc_index in range(self.number_of_documents):
-            topic_counts = []
-            for topic_index in range(number_of_topics):
-                count = 0
-                for word_index in range(self.vocabulary_size):
-                    count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
-                topic_counts.append(count)
-            self.document_topic_prob[doc_index, :] = normalize(np.array(topic_counts).reshape(1, -1))
-        # print("document_topic_prob:")
-        # print(self.document_topic_prob)
-
         # update P(w | z)
         for topic_index in range(number_of_topics):
             word_counts = []
@@ -228,6 +222,17 @@ class Corpus(object):
         # print("topic_word_prob")
         # print(self.topic_word_prob)
 
+        # update P(z | d)
+        for doc_index in range(self.number_of_documents):
+            topic_counts = []
+            for topic_index in range(number_of_topics):
+                count = 0
+                for word_index in range(self.vocabulary_size):
+                    count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
+                topic_counts.append(count)
+            self.document_topic_prob[doc_index, :] = normalize(np.array(topic_counts).reshape(1, -1))
+        # print("document_topic_prob:")
+        # print(self.document_topic_prob)
 
     def calculate_likelihood(self, number_of_topics):
         """ Calculate the current log-likelihood of the model using
