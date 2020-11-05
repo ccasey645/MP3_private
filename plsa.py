@@ -207,14 +207,14 @@ class Corpus(object):
         # ############################
         # your code here
         # ############################
-        for idoc in range(self.number_of_documents):
-            topic_cnts = []
-            for itopic in range(number_of_topics):
-                psuedo_count = 0
-                for iword in range(self.vocabulary_size):
-                    psuedo_count += self.term_doc_matrix[idoc][iword] * self.topic_prob[idoc][itopic][iword]
-                topic_cnts.append(psuedo_count)
-            self.document_topic_prob[idoc, :] = normalize(np.array(topic_cnts).reshape(1, -1))
+        for doc_index in range(self.number_of_documents):
+            topic_counts = []
+            for topic_index in range(number_of_topics):
+                count = 0
+                for word_index in range(self.vocabulary_size):
+                    count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
+                topic_counts.append(count)
+            self.document_topic_prob[doc_index, :] = normalize(np.array(topic_counts).reshape(1, -1))
 
         # for doc_index in range(self.number_of_documents):
         #     for topic_index in range(number_of_topics):
@@ -252,8 +252,8 @@ class Corpus(object):
         total = 0
         topic_total = 0
         for doc_index in range(self.number_of_documents):
-            topic_total = 0
             for word_index in range(self.vocabulary_size):
+                topic_total = 0
                 for topic_index in range(number_of_topics):
                     topic_total += self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
                 total += self.term_doc_matrix[doc_index][word_index] * np.log(topic_total)
@@ -309,7 +309,7 @@ def main():
     print("Number of documents:" + str(len(corpus.documents)))
     number_of_topics = 2
     max_iterations = 160
-    epsilon = 0.001
+    epsilon = 0.0001
     corpus.plsa(number_of_topics, max_iterations, epsilon)
 
 
