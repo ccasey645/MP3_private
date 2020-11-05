@@ -2,17 +2,25 @@ import numpy as np
 import math
 
 
-def normalize(input_matrix):
+def normalize(input_matrix, is_col=False):
     """
     Normalizes the rows of a 2d input_matrix so they sum to 1
     """
+    if is_col:
+        col_sums = input_matrix.sum(axis=0)
+        try:
+            assert (np.count_nonzero(col_sums)==np.shape(col_sums)[0]) # no row should sum to zero
+        except Exception:
+            raise Exception("Error while normalizing. Row(s) sum to zero")
+        new_matrix = input_matrix / col_sums
 
-    row_sums = input_matrix.sum(axis=1)
-    try:
-        assert (np.count_nonzero(row_sums)==np.shape(row_sums)[0]) # no row should sum to zero
-    except Exception:
-        raise Exception("Error while normalizing. Row(s) sum to zero")
-    new_matrix = input_matrix / row_sums[:, np.newaxis]
+    else:
+        row_sums = input_matrix.sum(axis=1)
+        try:
+            assert (np.count_nonzero(row_sums)==np.shape(row_sums)[0]) # no row should sum to zero
+        except Exception:
+            raise Exception("Error while normalizing. Row(s) sum to zero")
+        new_matrix = input_matrix / row_sums[:, np.newaxis]
     return new_matrix
 
 
@@ -172,21 +180,20 @@ class Corpus(object):
         """
         print("E step:")
         for doc_index in range(self.number_of_documents):
-            word_total = 0
+            topic_total = 0
             for topic_index in range(number_of_topics):
+                word_total = 0
                 for word_index in range(self.vocabulary_size):
-                    topic_total = 0
-
-
-                    #total = 0
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
-                    #total += self.topic_prob[doc_index][topic_index][word_index]
+                    word_total += self.topic_prob[doc_index][topic_index][word_index]
+                self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
+            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
                     #topic_total += self.topic_prob[doc_index][topic_index][word_index]
                 #self.topic_prob[doc_index][topic_index] /= topic_total
                 # for topic_index in range(2):
                 #     self.topic_prob[doc_index][topic_index][word_index] /= total
-                self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index].transpose()).transpose()
-            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
+            #     self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index].transpose()).transpose()
+            # self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
             # self.topic_prob = normalize_three_d(self.topic_prob)
 
 
