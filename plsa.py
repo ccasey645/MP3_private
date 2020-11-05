@@ -173,14 +173,18 @@ class Corpus(object):
         """ The E-step updates P(z | w, d)
         """
         print("E step:")
+        topic_counts = []
         for doc_index in range(self.number_of_documents):
             for word_index in range(self.vocabulary_size):
                 topic_sum = 0
                 for topic_index in range(number_of_topics):
                     self.topic_prob[doc_index][topic_index][word_index] = self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
                     topic_sum += self.topic_prob[doc_index][topic_index][word_index]
-                for topic_index in range(number_of_topics):
-                    self.topic_prob[doc_index][topic_index][word_index] = self.topic_prob[doc_index][topic_index][word_index] / topic_sum
+                topic_counts.append(topic_sum)
+        for doc_index in range(self.number_of_documents):
+            for topic_index in range(number_of_topics):
+                for word_index in range(self.vocabulary_size):
+                    self.topic_prob[doc_index][topic_index][word_index] /= topic_counts[word_index]
                 #self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
             #self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
 
@@ -190,17 +194,6 @@ class Corpus(object):
         """ The M-step updates P(w | z)
         """
         print("M step:")
-
-        # update P(z | d)
-        for doc_index in range(self.number_of_documents):
-            topic_counts = []
-            for topic_index in range(number_of_topics):
-                count = 0
-                for word_index in range(self.vocabulary_size):
-                    count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
-                topic_counts.append(count)
-            self.document_topic_prob[doc_index, :] = normalize(np.array(topic_counts).reshape(1, -1))
-
         # update P(w | z)
         for topic_index in range(number_of_topics):
             word_counts = []
@@ -211,6 +204,15 @@ class Corpus(object):
                 word_counts.append(count)
             self.topic_word_prob[topic_index, :] = normalize(np.array(word_counts).reshape(1,-1))
 
+        # update P(z | d)
+        for doc_index in range(self.number_of_documents):
+            topic_counts = []
+            for topic_index in range(number_of_topics):
+                count = 0
+                for word_index in range(self.vocabulary_size):
+                    count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
+                topic_counts.append(count)
+            self.document_topic_prob[doc_index, :] = normalize(np.array(topic_counts).reshape(1, -1))
 
     def calculate_likelihood(self, number_of_topics):
         """ Calculate the current log-likelihood of the model using
