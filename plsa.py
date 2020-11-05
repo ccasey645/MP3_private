@@ -185,7 +185,7 @@ class Corpus(object):
                 #self.topic_prob[doc_index][topic_index] /= topic_total
                 # for topic_index in range(2):
                 #     self.topic_prob[doc_index][topic_index][word_index] /= total
-                self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
+            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index], is_col=True)
         for doc_index in range(self.number_of_documents):
             self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
 
