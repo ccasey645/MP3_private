@@ -232,7 +232,7 @@ class Corpus(object):
             for word_index in range(self.vocabulary_size):
                 count = 0
                 for doc_index in range(self.number_of_documents):
-                    self.topic_word_prob[topic_index][word_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
+                    #self.topic_word_prob[topic_index][word_index] = self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                     count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
                 word_counts.append(count)
             #self.topic_word_prob = normalize(self.topic_word_prob)
@@ -252,8 +252,8 @@ class Corpus(object):
         total = 0
         topic_total = 0
         for doc_index in range(self.number_of_documents):
+            topic_total = 0
             for word_index in range(self.vocabulary_size):
-                topic_total = 0
                 for topic_index in range(number_of_topics):
                     topic_total += self.document_topic_prob[doc_index][topic_index] * self.topic_word_prob[topic_index][word_index]
                 total += self.term_doc_matrix[doc_index][word_index] * np.log(topic_total)
