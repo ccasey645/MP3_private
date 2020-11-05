@@ -139,24 +139,10 @@ class Corpus(object):
         Don't forget to normalize! 
         HINT: you will find numpy's random matrix useful [https://docs.scipy.org/doc/numpy-1.15.0/reference/generated/numpy.random.random.html]
         """
-        # ############################
-        # your code here
-        # ############################
 
         self.document_topic_prob = np.random.rand(self.number_of_documents, number_of_topics)
-        # for i in range(0, self.number_of_documents):
-        #     self.document_topic_prob.append([])
-        #     for j in range(0, number_of_topics):
-        #         topic_prob = np.random.random()
-        #         self.document_topic_prob[i].append(topic_prob)
-
         self.topic_word_prob = np.random.rand(number_of_topics, self.vocabulary_size)
-        # for i in range(0, number_of_topics):
-        #     self.topic_word_prob.append([])
-        #     for word in self.vocabulary:
-        #         vocab_prob = np.random.random()
-        #         self.topic_word_prob[i].append(vocab_prob)
-        
+
 
     def initialize_uniformly(self, number_of_topics):
         """
@@ -200,7 +186,7 @@ class Corpus(object):
                 #     self.topic_prob[doc_index][topic_index][word_index] /= total
             #     self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
             # self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index].transpose()).transpose()
-        self.topic_prob = normalize_three_d(self.topic_prob)
+            self.topic_prob = normalize_three_d(self.topic_prob)
 
 
 
