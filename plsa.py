@@ -16,14 +16,14 @@ def normalize(input_matrix):
     return new_matrix
 
 
-def normalize_cols(input_matrix):
+def normalize_three_d(input_matrix):
     """
     Normalizes the rows of a 2d input_matrix so they sum to 1
     """
-
-    col_sums = input_matrix.sum(axis=0)
-    new_matrix = input_matrix / row_sums[:, :, np.newaxis]
-    return new_matrix
+    norm = input_matrix.sum(axis=0)
+    norm[norm == 0.0] = 1.0
+    input_matrix /= norm
+    return input_matrix
 
 
 class Corpus(object):
@@ -185,6 +185,7 @@ class Corpus(object):
         """ The E-step updates P(z | w, d)
         """
         print("E step:")
+
         for doc_index in range(self.number_of_documents):
             word_total = 0
             for word_index in range(self.vocabulary_size):
@@ -198,8 +199,9 @@ class Corpus(object):
                 #self.topic_prob[doc_index][topic_index] /= topic_total
                 # for topic_index in range(2):
                 #     self.topic_prob[doc_index][topic_index][word_index] /= total
-                self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
-            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index].transpose()).transpose()
+            #     self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
+            # self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index].transpose()).transpose()
+        self.topic_prob = normalize_three_d(self.topic_prob)
 
 
 
@@ -211,10 +213,6 @@ class Corpus(object):
         print("M step:")
         
         # update P(w | z)
-        
-        # ############################
-        # your code here
-        # ############################
         for doc_index in range(self.number_of_documents):
             topic_counts = []
             for topic_index in range(number_of_topics):
@@ -232,9 +230,6 @@ class Corpus(object):
 
         # update P(z | d)
 
-        # ############################
-        # your code here
-        # ############################
         for topic_index in range(number_of_topics):
             word_counts = []
             for word_index in range(self.vocabulary_size):
