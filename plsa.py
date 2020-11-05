@@ -203,17 +203,6 @@ class Corpus(object):
         """ The M-step updates P(w | z)
         """
         print("M step:")
-        # update P(w | z)
-        for topic_index in range(number_of_topics):
-            word_counts = []
-            for word_index in range(self.vocabulary_size):
-                count = 0
-                for doc_index in range(self.number_of_documents):
-                    count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
-                word_counts.append(count)
-            self.topic_word_prob[topic_index, :] = normalize(np.array(word_counts).reshape(1,-1))
-        # print("topic_word_prob")
-        # print(self.topic_word_prob)
 
         # update P(z | d)
         for doc_index in range(self.number_of_documents):
@@ -226,6 +215,19 @@ class Corpus(object):
             self.document_topic_prob[doc_index, :] = normalize(np.array(topic_counts).reshape(1, -1))
         # print("document_topic_prob:")
         # print(self.document_topic_prob)
+
+        # update P(w | z)
+        for topic_index in range(number_of_topics):
+            word_counts = []
+            for word_index in range(self.vocabulary_size):
+                count = 0
+                for doc_index in range(self.number_of_documents):
+                    count += self.term_doc_matrix[doc_index][word_index] * self.topic_prob[doc_index][topic_index][word_index]
+                word_counts.append(count)
+            self.topic_word_prob[topic_index, :] = normalize(np.array(word_counts).reshape(1,-1))
+        # print("topic_word_prob")
+        # print(self.topic_word_prob)
+
 
     def calculate_likelihood(self, number_of_topics):
         """ Calculate the current log-likelihood of the model using
