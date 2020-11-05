@@ -195,8 +195,8 @@ class Corpus(object):
             # self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
             # self.topic_prob = normalize_three_d(self.topic_prob)
 
-        for doc_index in range(self.number_of_documents):
-            self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
+        # for doc_index in range(self.number_of_documents):
+        #     self.topic_prob[doc_index] = normalize(self.topic_prob[doc_index])
 
     def maximization_step(self, number_of_topics):
         """ The M-step updates P(w | z)
